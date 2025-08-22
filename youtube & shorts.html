@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>YouTube Clone with Shorts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ========== GENERAL ========== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f9f9f9;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ========== HEADER ========== */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header img {
+      height: 24px;
+      margin-right: 12px;
+      cursor: pointer;
+    }
+
+    .middle-section {
+      display: flex;
+      flex: 1;
+      max-width: 600px;
+    }
+
+    .search-bar {
+      flex: 1;
+      padding: 6px 12px;
+      border-radius: 2px 0 0 2px;
+      border: 1px solid #ccc;
+    }
+
+    .search-button,
+    .voice-search-button {
+      padding: 6px;
+      border: 1px solid #ccc;
+      background: #f8f8f8;
+      border-left: none;
+      cursor: pointer;
+    }
+
+    .right-section img {
+      margin-left: 16px;
+      cursor: pointer;
+      height: 24px;
+    }
+
+    /* ========== SIDEBAR ========== */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      top: 55px;
+      background-color: white;
+      width: 72px;
+      z-index: 200;
+      padding-top: 5px;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    .sidebar-link img {
+      height: 20px;
+      margin-right: 12px;
+    }
+
+    .sidebar-link:hover {
+      background-color: rgb(235, 235, 235);
+    }
+
+
+    .sidebar-link div {
+      font-family: Roboto, Arial;
+      font-size: 15px;
+    }
+
+
+    /* ========== video css =============*/
+    .thumbnail-container {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      /* or fixed width like 300px */
+    }
+
+    .thumbnail {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 10px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .video-duration {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 2px 6px;
+      font-size: 12px;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+
+
+
+
+    .video-title {
+      margin-top: 0;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      margin-bottom: 10px;
+    }
+
+    .video-time {
+      font-size: 12px;
+      font-weight: bold;
+      padding: 2px 4px;
+      border-radius: 3px;
+      background-color: black;
+      color: white;
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+    }
+
+
+    .video-info-grid {
+      display: grid;
+      grid-template-columns: 50px 1fr;
+    }
+
+    .profile-picture {
+      width: 36px;
+      height: 36px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .thumbnail-row {
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .video-author,
+    .video-stats {
+      font-size: 12px;
+      color: rgb(96, 96, 96);
+    }
+
+    .video-author {
+      margin-bottom: 4px;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      column-gap: 16px;
+      row-gap: 40px;
+    }
+
+    @media (max-width: 750px) {
+      .video-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (min-width: 751px) and (max-width: 999px) {
+      .video-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+    }
+
+    @media (min-width: 1000px) {
+      .video-grid {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+    }
+
+    .video-time {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px;
+      border-radius: 2px;
+      background-color: black;
+      color: white;
+      position: absolute;
+      bottom: 8px;
+      right: 5px;
+    }
+
+    /* ========== MAIN CONTENT ========== */
+    .main {
+      margin-left: 200px;
+      padding: 16px;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .video-preview {
+      background: #fff;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .thumbnail-row {
+      position: relative;
+    }
+
+    .thumbnail-row img {
+      width: 100%;
+      height: auto;
+      display: block;
+
+    }
+
+    .video-duration {
+      position: absolute;
+      background-color: black;
+      color: white;
+      bottom: 10px;
+      right: 10px;
+      5: 00
+    }
+
+
+    .video-time {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 2px 4px;
+      font-size: 0.75rem;
+      border-radius: 2px;
+    }
+
+    .video-info-grid {
+      display: flex;
+      padding: 8px;
+    }
+
+    .profile-picture {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .video-title {
+      font-size: .95rem;
+      margin-bottom: 4px;
+    }
+
+    .video-author {
+      font-size: .85rem;
+      color: #606060;
+    }
+
+    .video-stats {
+      font-size: .8rem;
+      color: #909090;
+    }
+
+    /* ========== SHORTS SECTION ========== */
+    .shorts-container {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      flex-direction: row;
+      align-items: stretch;
+      margin-bottom: 20px;
+
+      /* Make items go top to bottom */
+    }
+
+
+    .shorts-card {
+      min-width: 180px;
+      flex-shrink: 10;
+      scroll-snap-align: start;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      text-align: center;
+      flex: 2 1 180px;
+      /* Grows twice as much as siblings with flex-grow: 1 */
+    }
+
+
+
+
+    .shorts-caption {
+      display: flex;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      text-decoration: none;
+
+    }
+
+
+    .shorts-card {
+      min-width: 180px;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      text-align: center;
+    }
+
+    .shorts-card img {
+      width: 100%;
+      height: 320px;
+      display: block;
+      object-fit: cover;
+    }
+
+    @media(max-width: 600px) {
+      .shorts-card {
+        min-width: 110px;
+      }
+
+      .video-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div style="display:flex; align-items:center;">
+      <img src="icons_files\hamburger-menu.svg" alt="menu">
+      <img src="icons_files/youtube-logo.svg" alt="YouTube">
+    </div>
+    <div class="middle-section">
+      <input class="search-bar" placeholder="Search">
+      <button class="search-button"><img src="icons_files/search.svg" alt="search"></button>
+      <button class="voice-search-button"><img src="icons_files/voice-search-icon.svg" alt="voice"></button>
+    </div>
+    <div class="right-section">
+      <img src="icons_files\upload.svg" alt="create">
+      <img src="icons_files\youtube-apps.svg" alt="apps">
+      <img src="icons_files\notifications.svg" alt="notifications">
+      <img src="my-channel-pic.jpg" alt="profile">
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-link"><img src="icons_files\home.svg">
+      <div>Home</div>
+    </div>
+    <div class="sidebar-link"><img src="icons_files\explore.svg">
+      <div>Explore</div>
+    </div>
+    <div class="sidebar-link"><img src="icons_files\subscriptions.svg">
+      <div>Subscriptions</div>
+    </div>
+    <div class="sidebar-link"><img src="icons_files\originals.svg">
+      <div>Originals</div>
+    </div>
+    <div class="sidebar-link"><img src="icons_files\youtube-music.svg">
+      <div>YouTube Music</div>
+    </div>
+    <div class="sidebar-link"><img src="icons_files\library.svg">
+      <div>Library</div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+    <div class="video-grid">
+      <!-- Example video card -->
+      <div class="video-preview">
+        <a href="https://youtu.be/iyukIb_QqZU?feature=shared">
+          <div class="thumbnail-row">
+            <img src="kotaro/kotaro.jpg" alt="thumbnail">
+            <div class="video-duration">4:36</div>
+          </div>
+        </a>
+        <div class="video-info-grid">
+          <img class="profile-picture" src="channel-picture/DVA2.jpg">
+          <div>
+            <p class="video-title"><b>Go to the beach - Gakuen Babysitters</b></p>
+            <p class="video-author">DVA Anime</p>
+            <p class="video-stats">3.4M views · 6 months ago</p>
+          </div>
+        </div>
+      </div>
+
+      <a href="https://youtu.be/JTWfRLhinUk?feature=shared" target="_blank"
+        style="text-decoration: none; color: inherit;">
+        <div class="video-preview">
+          <div class="thumbnail-row">
+            <img class="thumbnail" src="tomodachi/tomodacchi.jpg" alt="video-thumnail">
+            <div class="video-time">1:51:24</div>
+          </div>
+          <div class="video-info-grid">
+            <div class="channel-picture">
+              <img class="profile-picture" src="channel-picture/v.jpg">
+            </div>
+            <div class="video-info">
+              <p class="video-title">
+                <b>(FULL)Yūichi Katagiri A Psychopath Devil Acts Like Weak And Poor And Hides His True Identity
+                  Hindi</b>
+              </p>
+              <p class="video-author">
+                think Anime
+              </p>
+              <p class="video-stats">
+                488k views &#183; 10 months ago</p>
+            </div>
+          </div>
+        </div>
+      </a>
+
+
+      <a href="https://youtu.be/SCLQMC7Ld9I?feature=shared" target="_blank"
+        style="text-decoration: none; color: inherit;">
+        <div class="video-preview">
+          <div class="thumbnail-row">
+            <img class="thumbnail" src="baby Aqua/baby Aqua.jpg" alt="video-thumnail">
+            <div class="video-time">0:42</div>
+          </div>
+          <div class="video-info-grid">
+            <img class="profile-picture" src="channel-picture\Natkat.jpg">
+            <div>
+              <p class="video-title"><b>Baby Aqua vs Teen Aqua Dancing Side by Side Comparison| Oshi no ko</b></p>
+              <p class="video-author">Natkat</p>
+              <p class="video-stats">141M views • 1 years ago</p>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <a href="https://youtu.be/NsApmKM4D6M?feature=shared" target="_blank"
+        style="text-decoration: none; color: inherit;">
+        <div class="video-preview">
+          <div class="thumbnail-row">
+            <img class="thumbnail" src="mummy anime/mummy anime.jpg" alt="video-thumnail">
+            <div class="video-time">1:15</div>
+          </div>
+          <div class="video-info-grid">
+            <img class="profile-picture" src="channel-picture\evili.jpg">
+            <div>
+
+              <p class="video-title"><b>Moe Blob anime has evolved.</b></p>
+              <p class="video-author"> evilicious</p>
+              <p class="video-stats">11M views • 7 years ago</p>
+            </div>
+          </div>
+        </div>
+      </a>
+
+
+
+      <a href="https://youtu.be/euE4k-wjlps?feature=shared" target="_blank"
+        style="text-decoration: none; color: inherit;">
+        <div class="video-preview">
+          <div class="thumbnail-row">
+            <img class="thumbnail" src="blue/blue exorcist.avif" alt="video-thumnail">
+            <div class="video-time">1:39</div>
+          </div>
+          <div class="video-info-grid">
+            <img class="profile-picture" src="channel-picture\Crunchyroll.jpg">
+            <div>
+
+              <p class="video-title"><b>Blue Exorcist -Shimane Illuminati Saga- | OFFICIAL TRAILER</b></p>
+              <p class="video-author"> MrBeast</p>
+              <p class="video-stats">141M views &#183; 1 year ago</p>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <a href="https://youtu.be/euE4k-wjlps?feature=shared" target="_blank"
+        style="text-decoration: none; color: inherit;">
+        <div class="video-preview">
+          <div class="thumbnail-row">
+            <img class="thumbnail" src="buddy daddies/buddy daddies2.jpg" alt="video-thumnail">
+            <div class="video-time">1:39</div>
+          </div>
+          <div class="video-info-grid">
+            <img class="profile-picture" src="channel-picture\mystxc.jpg">
+            <div>
+
+              <p class="video-title"><b>The Strongest Assassins Adopt a Little Girl After They Killed Her Dad In hindi |
+                  Anime trix</b></p>
+              <p class="video-author"> MrBeast</p>
+              <p class="video-stats">706k views &#183; 7 months ago</p>
+            </div>
+          </div>
+        </div>
+      </a>
+
+
+      <a href="https://youtu.be/euE4k-wjlps?feature=shared" target="_blank"
+        style="text-decoration: none; color: inherit;">
+        <div class="video-preview">
+          <div class="thumbnail-row">
+            <img class="thumbnail" src="elite/Elite.avif" alt="video-thumnail">
+            <div class="video-time">1:39</div>
+          </div>
+          <div class="video-info-grid">
+            <img class="profile-picture" src="channel-picture\Omix.jpg">
+            <div>
+
+              <p class="video-title"><b>Classroom of the Elite - Episode 01 [English Sub]</b></p>
+              <p class="video-author"> MrBeast</p>
+              <p class="video-stats">141M views &#183; 1 year ago</p>
+            </div>
+          </div>
+        </div>
+      </a>
+
+
+      <a href="https://youtu.be/yZcOJ8rSCig?feature=shared" target="_blank"
+        style="text-decoration: none; color: inherit;">
+        <div class="video-preview">
+          <div class="thumbnail-row">
+            <img class="thumbnail" src="new gate/new gate.avif" alt="video-thumnail">
+            <div class="video-time">23:39</div>
+          </div>
+          <div class="video-info-grid">
+            <img class="profile-picture" src="channel-picture\Recap-kun.jpg">
+            <div>
+
+              <p class="video-title"><b>THE NEW GATE - Episode 01 [English Sub]</b></p>
+              <p class="video-author"> MrBeast</p>
+              <p class="video-stats">141M views &#183; 1 year ago</p>
+            </div>
+          </div>
+        </div>
+      </a>
+
+
+
+      <!-- repeat additional video previews here... -->
+    </div>
+
+    <!-- SHORTS -->
+
+
+    <section class="shorts-section">
+      <h2>Shorts</h2>
+
+      <!-- Shorts Card 1 -->
+      <div class="shorts-container 2">
+        <div class="shorts-card">
+          <a href="https://youtube.com/shorts/bGmB2FxwOnU?feature=shared" target="_blank">
+            <img src="blue short.png" alt="Short 1">
+          </a>
+          <p class="shorts-caption"><b>blue exorcist |10 pawar full anime 😈🔥</b></p>
+        </div>
+
+
+
+        <!-- Shorts Card 2 -->
+        <div class="shorts-card">
+          <a href="https://youtube.com/shorts/aIeg4Qr0Yng?feature=shared" target="_blank">
+            <img src="bachira short.png" alt="Short 2">
+          </a>
+          <p class="shorts-caption"><b>Bachira & Isagi sad Blue Lock edit.</b></p>
+        </div>
+
+        <!-- Shorts Card 3 -->
+        <div class="shorts-card">
+          <a href="https://youtube.com/shorts/9Ca_KD4D_PE?feature=shared" target="_blank">
+            <img src="demon short.png" alt="Short 3">
+          </a>
+          <p class="shorts-caption"><b>Shinobu vs Doma 🥶 Demon Slayer</b></p>
+        </div>
+
+        <!-- Shorts Card 4 -->
+        <a href="https://youtube.com/shorts/V89rpHDiro0?feature=shared" target="_blank" class="shorts-link">
+          <div class="shorts-card 4">
+            <img src="dex & jisoo.png" alt="Short Video 4">
+        </a>
+        <p class="shorts-caption"><b>Jisoo and dex flirting..</b></p>
+      </div>
+
+      <!-- Shorts Card 5 -->
+      <a href="https://youtube.com/shorts/DLyMRQA1zz4?feature=shared" target="_blank" class="shorts-link">
+        <div class="shorts-card 5">
+          <img src="haein.png" alt="shorts-video 5">
+      </a>
+      <p class="shorts-caption"><b>The way hae-in looks at jisoo😍😍</b></p>
+  </div>
+
+
+  <a href="https://youtube.com/shorts/Gh3yLy6F3Es?feature=shared" target="_blank" class="shorts-link">
+    <div class="shorts-card 6">
+      <img src="neverless.png" alt="shorts-video 6">
+  </a>
+  <p class="shorts-caption"><b>Nanno Edit ~ Doin' Time ✨</b></p>
+  </div>
+  </div>
+
+
+
+  <div class="shorts-container 2">
+    <!-- Shorts Card 6 -->
+    <a href="https://youtube.com/shorts/6aXrmR6KAjw?si=aMufDGJ3ZmorXRp7" target="_blank" class="shorts-link">
+      <div class="shorts-card card6">
+        <img src="fumiya.png" alt="Short Video 6">
+    </a>
+    <p class="shorts-caption"><b>Fumiya TakahashiEdit🖤</b></p>
+  </div>
+
+
+
+  <!-- Shorts Card  7 -->
+  <a href="https://youtube.com/shorts/EItum0CFIds?feature=shared=" target="_blank" class="shorts-link">
+    <div class="shorts-card card7">
+      <img src="jisoo.png" alt="Short Video 7">
+  </a>
+  <p class="shorts-caption"><b>OMG!!Jisoo.The tension is tensioning</b></p>
+  </div>
+
+
+
+  <!-- Shorts Card 8 -->
+  <a href="https://youtube.com/shorts/9dMPWrHsU-g?feature=shared" target="_blank" class="shorts-link">
+    <div class="shorts-card card8">
+      <img src="month.png" alt="Short Video 8">
+  </a>
+  <p class="shorts-caption"><b>everyone can be wrong😏❣️</b></p>
+  </div>
+
+
+
+  <!-- Shorts Card 9 -->
+  <a href="https://youtube.com/shorts/bJvWkqoDyQg?feature=shared" target="_blank" class="shorts-link">
+    <div class="shorts-card card9">
+      <img src="weiyang.png" alt="Short Video 9">
+  </a>
+  <p class="shorts-caption"><b>This boiiii💗😍 😈🔥</b></p>
+  </div>
+
+
+
+
+  <!-- Shorts Card 10 -->
+  <a href="https://youtube.com/shorts/SoKTu1wRjJM?feature=shared" target="_blank" class="shorts-link">
+    <div class="shorts-card card10">
+      <img src="suho.png" alt="Short Video 10">
+  </a>
+  <p class="shorts-caption"><b>Their eyes contact😳💓 || Cdrama🎭 ~ You Are Desire✨🔥</b></p>
+  </div>
+
+
+  <!-- Shorts Card 11 -->
+
+  <a href="https://youtube.com/shorts/WtyE5I_oNRQ?feature=shared" target="_blank" class="shorts-link">
+    <div class="shorts-card card 11">
+      <img src="/index/jenie.png" alt="shorts-video 11">
+  </a>
+  <p class="shorts-caption"><b>Jisoo's reaction when Jennie was teased by Men!! 😂🤣</b></p>
+  </div>
+  </div>
+
+
+
+  <div class="video-grid">
+    <div class="video-preview">
+      <a href="https://youtu.be/iyukIb_QqZU?feature=shared">
+        <div class="thumbnail-row">
+          <img class="thumbnail" src="kotaro/kotaro.jpg">
+      </a>
+      <div class="video-duration">4:36</div>
+    </div>
+    <div class="video-info-grid">
+      <div class="channel-picture">
+        <img class="profile-picture" src="channel-picture/DVA2.jpg">
+      </div>
+      <div class="video-info">
+        <p class="video-title">
+          <b>Go to the beach - Gakuen Babysitters | 学園ベビーシッターズ</b>
+        </p>
+        <p class="video-author">
+          DVA Anime
+        </p>
+        <p class="video-stats">
+          3.4M views &#183; 6 months ago
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="video-preview">
+    <a href="https://youtu.be/Z2MWBozgrag?feature=shared">
+      <div class="thumbnail-row">
+        <img class="thumbnail" src="tokiyo/tokiyo.jpg">
+    </a>
+    <div class="video-duration">0:32</div>
+  </div>
+  <div class="video-info-grid">
+    <div class="channel-picture">
+      <img class="profile-picture" src="channel-image\mikey.jpg">
+    </div>
+    <div class="video-info">
+      <p class="video-title">
+        <b>「 Mikey kicks Hanma 😈」- Mikey vs Hanma | Tokyo Revengers |</b>
+      </p>
+      <p class="video-author">
+        Markiplier
+      </p>
+      <p class="video-stats">
+        117k views &#183; 3 years ago
+      </p>
+    </div>
+  </div>
+  </div>
+
+
+  <a href="https://youtu.be/hAvB0x8OHjQ?feature=shared" target="_blank" style="text-decoration: none; color: inherit;">
+    <div class="video-preview">
+      <div class="thumbnail-row">
+        <img class="thumbnail" src="demon slayer/demon slayer.jpg">
+        <div class="video-duration">4:42</div>
+      </div>
+      <div class="video-info-grid">
+        <div class="channel-picture">
+          <img class="profile-picture" src="channel-picture/otaku.jpg">
+        </div>
+        <div class="video-info">
+          <p class="video-title">
+            <b> Muichiro vs Gyokko full fight ! Kimitshu no yaiba | Demon slayer</b>
+          </p>
+          <p class="video-author">
+            Otakucion
+          </p>
+          <p class="video-stats">
+            140k views &#183; 2 years ago
+          </p>
+        </div>
+      </div>
+    </div>
+  </a>
+
+
+  <a href="https://youtu.be/WfygbGveFKw?si=hOPuvUU5mxtkzVPG" target="_blank"
+    style="text-decoration: none; color: inherit;">
+    <div class="video-preview">
+      <div class="thumbnail-row">
+        <img class="thumbnail" src="bluelock/bluelock2.jpg">
+        <div class="video-duration">54:16</div>
+      </div>
+      <div class="video-info-grid">
+        <div class="channel-picture">
+          <img class="profile-picture" src="channel-picture/mystxc.jpg">
+        </div>
+        <div class="video-info">
+          <p class="video-title">
+            <b> Rin x bachira team learning English Blue lock ep 24 funny moments</b>
+          </p>
+          <p class="video-author">
+            MrBeast
+          </p>
+          <p class="video-stats">
+            214K views 2 years ago
+          </p>
+        </div>
+      </div>
+    </div>
+  </a>
+
+
+  <a href="https://youtu.be/iL0h6lox_p4?si=hS3jnIW7YCi6V9nx" target="_blank"
+    style="text-decoration: none; color: inherit;">
+    <div class="video-preview">
+      <div class="thumbnail-row">
+        <img class="thumbnail" src="fumiya\kun2.jpg">
+        <div class="video-duration">54:16</div>
+      </div>
+      <div class="video-info-grid">
+        <div class="channel-picture">
+          <img class="profile-picture" src="fumiya/fumiya kun2.jpg">
+        </div>
+        <div class="video-info">
+          <p class="video-title">
+            <b> Fumiya Takahashi Edit🖤</b>
+          </p>
+          <p class="video-author">
+            oricon -Japanese entertainment news
+          </p>
+          <p class="video-stats">
+            706k views &#183; 7 months ago
+          </p>
+        </div>
+      </div>
+    </div>
+  </a>
+
+
+  <a href="https://youtu.be/pR63T5tiUNE?feature=shared" target="_blank" style="text-decoration: none; color: inherit;">
+    <div class="video-preview">
+      <div class="thumbnail-row">
+        <img class="thumbnail" src="death note\deadth note.jpg">
+        <div class="video-duration">0:36</div>
+      </div>
+      <div class="video-info-grid">
+        <div class="channel-picture">
+          <img class="profile-picture" src="channel-picture\CROSBY.jpg">
+        </div>
+        <div class="video-info">
+          <p class="video-title">
+            <b> Death Note - Kira's Laugh (Original)</b>
+          </p>
+          <p class="video-author">
+            CROSBY
+          </p>
+          <p class="video-stats">
+            18M views &#183; 17 years ago
+          </p>
+        </div>
+      </div>
+    </div>
+  </a>
+
+
+  <a href="https://youtu.be/dLKYFu_sMTM?feature=shared" target="_blank" style="text-decoration: none; color: inherit;">
+    <div class="video-preview">
+      <div class="thumbnail-row">
+        <img class="thumbnail" src="solo levling\solo leveling.jpg">
+        <div class="video-duration">7:20</div>
+      </div>
+      <div class="video-info-grid">
+        <div class="channel-picture">
+          <img class="profile-picture" src="channel-picture\Crunchyroll.jpg">
+        </div>
+        <div class="video-info">
+          <p class="video-title">
+            <b> Jinwoo vs Kargalgan | Solo Leveling Season 2 -Arise from the Shadow-</b>
+          </p>
+          <p class="video-author">
+            MrBeast
+          </p>
+          <p class="video-stats">
+            7.5M views &#183; 4 months ago
+          </p>
+        </div>
+      </div>
+    </div>
+  </a>
+
+
+
+  <a href="https://youtu.be/YKnowHCkAA8?feature=shared" target="_blank" style="text-decoration: none; color: inherit;">
+    <div class="video-preview">
+      <div class="thumbnail-row">
+        <img class="thumbnail" src="gojo\gojo.avif">
+        <div class="video-duration">24:09</div>
+      </div>
+      <div class="video-info-grid">
+        <div class="channel-picture">
+          <img class="profile-picture" src="channel-picture\gojo.jpg">
+        </div>
+        <div class="video-info">
+          <p class="video-title">
+            <b> 《JUJUTSU KAISEN》#2 (ENG sub | JP dub) 【Ani-One Asia】</b>
+          </p>
+          <p class="video-author">
+            Muse india
+          </p>
+          <p class="video-stats">
+            6.4M views &#183;1 year ago </p>
+        </div>
+      </div>
+    </div>
+  </a>
+
+
+
+  <!-- add more as needed -->
+  </div>
+  </section>
+  </div>
+
+</body>
+
+</html>
