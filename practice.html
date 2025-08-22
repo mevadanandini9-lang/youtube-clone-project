@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <title>WATCH ANIME</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      text-decoration: none;
+      list-style-type: none;
+      font-family: sans-serif;
+    }
+
+    body {
+      background-color: black;
+    }
+
+    .hero {
+      min-height: 100vh;
+      background-image: url("image/tanjiro.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 10px 40px;
+      border-bottom: 2px solid #fff;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+    .logo-text {
+      font-size: 20px;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    }
+
+    .logo-text span {
+      color: #00BFFF;
+    }
+
+    .nav ul {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .nav ul li a {
+      font-size: 15px;
+      color: #fff;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .nav ul li a:hover {
+      color: #5984b4;
+      border-bottom: 2px solid #5984b4;
+    }
+
+    .nav button {
+      padding: 11px 25px;
+      background: #5984b4;
+      border: 2px solid #fff;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #fff;
+      border-radius: 20px;
+      transition: 0.3s;
+    }
+
+    .nav button:hover {
+      scale: 0.95;
+    }
+
+    .content {
+      position: absolute;
+      top: 40%;
+      left: 10%;
+      transform: translateY(-50%);
+      color: white;
+    }
+
+    .content h2 {
+      font-size: 40px;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .content p {
+      font-size: 14px;
+      max-width: 500px;
+      margin-bottom: 20px;
+    }
+
+    .content button {
+      padding: 10px 20px;
+      margin-right: 10px;
+      background: #5984b4;
+      border: 2px solid #fff;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .content button:hover {
+      scale: 0.95;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hero">
+    <div class="nav">
+      <div class="logo-section">
+        <img src="anime-logo.jpg" alt="logo" class="logo" />
+        <div class="logo-text"><b>WATCH <span>ANIME</span></b></div>
+      </div>
+
+      <ul>
+
+        <li><a href="file:///C:/Users/DELL/buttons/youtube.html" target="_black">ANIME</a></li>
+        <li><a href="#">Series</a></li>
+        <li><a href="#">Movies</a></li>
+      </ul>
+
+      <button>More</button>
+    </div>
+
+    <div class="content">
+      <h2>Where imagination springs to life</h2>
+      <p>Embark on a journey through vibrant anime realms. Dive into stories that captivate, characters that inspire,
+        and a community that embraces your passion for anime.</p>
+      <button>Watch</button>
+      <button class="know_more">Know More</button>
+    </div>
+  </div>
+</body>
+
+</html>
